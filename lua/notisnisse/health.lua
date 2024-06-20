@@ -1,5 +1,7 @@
 local M = {}
 
-M.check = function() end
+M.check = function()
+	-- FIXME: Make sure the path is writable
+end
 
 return M
