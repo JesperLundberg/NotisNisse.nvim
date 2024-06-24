@@ -1,20 +1,14 @@
 local M = {}
 
--- Available commands for Tomat
+-- Available commands for NotisNisse
 local commands = {
-	["start"] = function()
-		-- require("tomat.main").start()
-	end,
-	["stop"] = function()
-		-- require("tomat.main").stop()
-	end,
-	["show"] = function()
-		-- require("tomat.main").show()
+	["add"] = function()
+		require("notisnisse.main").add_note()
 	end,
 }
 
 local function tab_completion(_, _, _)
-	-- Tab completion for Tomat
+	-- Tab completion for NotisNisse
 	local tab_commands = {}
 
 	-- Loop through the commands and add the key value to the tab completion
