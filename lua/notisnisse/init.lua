@@ -5,6 +5,9 @@ local commands = {
 	["add"] = function()
 		require("notisnisse.main").add_note()
 	end,
+	["show_all"] = function()
+		require("notisnisse.main").list_notes()
+	end,
 }
 
 local function tab_completion(_, _, _)

@@ -1,65 +1,75 @@
 local M = {}
 
-local sqlite = require("sqlite.db") --- for constructing sql databases
+local sqlite = require("sqlite") -- Ensure this matches the plugin's require statement
 local tbl = require("sqlite.tbl") --- for constructing sql tables
-local uri = "/tmp/bm_db_v1" -- defined here to be deleted later
 
---- sqlite builtin helper functions
-local julianday, strftime = sqlite.lib.julianday, sqlite.lib.strftime
+-- Get the database directory
+local dbdir = vim.fn.stdpath("data") .. "/databases"
 
-local entries = tbl("entries", {
+print(dbdir)
+
+local db_table_notes = tbl("notes", {
 	id = true, -- same as { type = "integer", required = true, primary = true }
-	link = { "text", required = true },
 	title = "text",
-	since = { "date", default = strftime("%s", "now") },
-	collection = {
-		type = "text",
-		reference = "collection.title",
-		on_update = "cascade", -- means when collection get updated update
-		on_delete = "null", -- means when collection get deleted, set to null
+	content = "text",
+	project = "text",
+})
+
+-- Initialize the database
+local db = sqlite({
+	uri = dbdir .. "/notisnisse.db",
+	notes = db_table_notes,
+	opt = {
+		lazy = true,
 	},
 })
 
--- sqlite.lua db object will be injected to every table at evaluation.
--- Though no connection will be open until the first sqlite operation.
-local BM = sqlite({
-	uri = uri,
-	entries = entries,
-	collection = { -- Yes, tables can be inlined without requiring sql.table.
-		title = {
-			"text",
-			required = true,
-			unique = true,
-			primary = true,
-		},
-	},
-	ts = {
-		_name = "timetamps", -- use this as table name not the field key.
-		id = true,
-		timestamp = { "real", default = julianday("now") },
-		entry = {
-			type = "integer",
-			reference = "entries.id",
-			on_delete = "cascade", --- when referenced entry is deleted, delete self
-		},
-	},
-	-- custom sqlite3 options, if you really know what you want. + keep_open + lazy
-	opts = {},
-})
+local notes = db.notes
 
---- Doesn't need to annotated.
-local collection, ts = BM.collection, BM.ts
+function notes:get_all_notes()
+	print(vim.inspect(self:get()))
+	-- print(vim.inspect(db:select("notes")))
+	-- return db:select("notes")
+	return {}
+end
 
-local function setup_database()
-	-- Setup the database
+function notes:ensure()
+	print(vim.loop.fs_stat(dbdir))
+
+	if not vim.loop.fs_stat(dbdir) then
+		vim.loop.fs_mkdir(dbdir, 493)
+	end
+end
+
+function notes:add_note(note_to_add)
+	-- Add a note to the database
+	self:insert({ title = note_to_add.title, content = note_to_add.content })
+end
+
+function M.add_note(title, content)
+	-- Add a note to the database
+	notes:add_note({ title = title, content = content })
 end
 
 function M.get_notes()
+	print("Here is the contents of db:select('notes')")
+	-- print(vim.inspect(db:select("notes")))
+	print("After select")
+
 	-- Get all notes from the database
+	local rows = notes:get_all_notes()
+
+	local result = {}
+	for _, row in ipairs(rows) do
+		table.insert(result, { id = row.id, title = row.title, content = row.content })
+	end
+
+	return result
 end
 
-function M.add_note()
-	-- Add a note to the database
+function M.setup()
+	-- Ensure the database exists
+	notes:ensure()
 end
 
 return M
