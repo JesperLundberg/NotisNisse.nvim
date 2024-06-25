@@ -10,8 +10,7 @@ local db = sqlite({
 	uri = dbdir .. "/notisnisse.db",
 	notes = {
 		id = true, -- same as { type = "integer", required = true, primary = true }
-		title = "text",
-		content = "text",
+		note = "text",
 		project = "text",
 	},
 	opt = {
@@ -56,14 +55,14 @@ end
 --- @param note_to_add table The note to add
 function notes:add_note(note_to_add)
 	-- Add a note to the database
-	self:insert({ title = note_to_add.title, content = note_to_add.content })
+	self:insert({ note = note_to_add.note })
 end
 
 --- Update a note in the database
 --- @param note_to_update table The note to update
 function notes:update_note(note_to_update)
 	-- Update a note in the database
-	self:update({ id = note_to_update.id }, { title = note_to_update.title, content = note_to_update.content })
+	self:update({ id = note_to_update.id }, { note = note_to_update.note })
 end
 
 --- Add a note to the database
@@ -74,31 +73,32 @@ function M.add_note(note_to_add)
 end
 
 --- Get all notes from the database
---- @param by string What to get notes by
---- @param project string The project to get notes for
---- @param id number The id of the note
 --- @return table All notes from the database
-function M.get_notes(by, project, id)
+function M.get_notes(opts)
 	local rows = {}
+
+	print("Getting notes")
 
 	-- Get all notes
 	-- if by is not provided, get all notes
-	if not by then
+	if not opts then
+		print("Getting all notes")
 		rows = notes:get_all_notes()
 	end
 
-	if by == "project" then
-		rows = notes:get_all_notes_by_project(project)
+	if opts.by == "project" then
+		print("Getting by project")
+		rows = notes:get_all_notes_by_project(opts.project)
 	end
 
-	if by == "id" then
+	if opts.by == "id" then
 		print("Getting by id")
-		rows = notes:get_note_by_id(id)
+		rows = notes:get_note_by_id(opts.id)
 	end
 
 	local result = {}
 	for _, row in ipairs(rows) do
-		table.insert(result, { id = row.id, title = row.title, content = row.content })
+		table.insert(result, { id = row.id, note = row.note })
 	end
 
 	return result
