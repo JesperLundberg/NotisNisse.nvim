@@ -33,9 +33,4 @@ vim.api.nvim_create_user_command("NotisNisse", function(opts)
 	commands[opts.args]()
 end, { nargs = "*", complete = tab_completion, desc = "NotisNisse plugin" })
 
-function M.setup(opts)
-	-- Setup the plugin
-	-- require("notisnisse.config").setup(opts)
-end
-
 return M

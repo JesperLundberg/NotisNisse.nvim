@@ -45,7 +45,7 @@ end
 
 -- FIXME: Make sure folder is created (use plenary?)
 --- Ensure the database exists
-function notes:ensure()
+local function ensure()
 	if not vim.loop.fs_stat(dbdir) then
 		vim.loop.fs_mkdir(dbdir, 493)
 	end
@@ -106,7 +106,7 @@ end
 
 function M.setup()
 	-- Ensure the database exists
-	notes:ensure()
+	ensure()
 end
 
 return M
