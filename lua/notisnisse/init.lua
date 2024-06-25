@@ -8,6 +8,12 @@ local commands = {
 	["show_all"] = function()
 		require("notisnisse.main").list_notes()
 	end,
+	["show_by_id"] = function()
+		require("notisnisse.main").get_note_by_id()
+	end,
+	["write_title"] = function()
+		require("notisnisse.main").write_title()
+	end,
 }
 
 local function tab_completion(_, _, _)
