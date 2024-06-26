@@ -1,20 +1,23 @@
 local M = {}
 
--- Available commands for Tomat
+-- Available commands for NotisNisse
 local commands = {
-	["start"] = function()
-		-- require("tomat.main").start()
+	["add"] = function()
+		require("notisnisse.main").add_note()
 	end,
-	["stop"] = function()
-		-- require("tomat.main").stop()
+	["show_all"] = function()
+		require("notisnisse.main").list_notes()
 	end,
-	["show"] = function()
-		-- require("tomat.main").show()
+	["show_by_id"] = function()
+		require("notisnisse.main").get_note_by_id()
+	end,
+	["write_title"] = function()
+		require("notisnisse.main").write_title()
 	end,
 }
 
 local function tab_completion(_, _, _)
-	-- Tab completion for Tomat
+	-- Tab completion for NotisNisse
 	local tab_commands = {}
 
 	-- Loop through the commands and add the key value to the tab completion
@@ -29,10 +32,5 @@ vim.api.nvim_create_user_command("NotisNisse", function(opts)
 	-- If the command exists then run the corresponding function
 	commands[opts.args]()
 end, { nargs = "*", complete = tab_completion, desc = "NotisNisse plugin" })
-
-function M.setup(opts)
-	-- Setup the plugin
-	-- require("notisnisse.config").setup(opts)
-end
 
 return M
