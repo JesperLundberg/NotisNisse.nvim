@@ -16,6 +16,7 @@ end
 
 function M.list_notes()
 	-- Get all notes
+	database.setup()
 	local notes = database.get_notes()
 
 	-- Print all notes
