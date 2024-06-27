@@ -1,8 +1,17 @@
+local path = require("plenary.path")
+
 local M = {}
 
-function M.get_root_dir(pattern)
-	local dot_git_path = vim.fn.finddir(".git", ".;")
-	return vim.fn.fnamemodify(dot_git_path, ":h")
+--- Get the root directory of the current git repository
+-- @return string: The absolute path to the root directory of the current git repository
+function M.get_root_dir()
+	-- Find the path of the .git directory
+	local root_path = vim.fn.finddir(".git", ".;")
+
+	-- Get the absolute path of the root directory
+	local absolute_root_path = path:new(root_path):absolute()
+
+	return absolute_root_path
 end
 
 return M

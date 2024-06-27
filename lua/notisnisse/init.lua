@@ -8,11 +8,8 @@ local commands = {
 	["show_all"] = function()
 		require("notisnisse.main").list_notes()
 	end,
-	["show_by_id"] = function()
-		require("notisnisse.main").get_note_by_id()
-	end,
-	["write_title"] = function()
-		require("notisnisse.main").write_title()
+	["show_project"] = function()
+		require("notisnisse.main").get_note_by_project()
 	end,
 }
 

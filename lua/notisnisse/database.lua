@@ -56,20 +56,20 @@ end
 --- @param note_to_add table The note to add
 function notes:add_note(note_to_add)
 	-- Add a note to the database
-	self:insert({ note = note_to_add.note })
+	self:insert({ note = note_to_add.note, project = note_to_add.project })
 end
 
 --- Update a note in the database
 --- @param note_to_update table The note to update
 function notes:update_note(note_to_update)
 	-- Update a note in the database
-	self:update({ id = note_to_update.id }, { note = note_to_update.note })
+	self:update({ id = note_to_update.id }, { note = note_to_update.note, project = note_to_update.project })
 end
 
 local function create_return_table(rows)
 	local result = {}
 	for _, row in ipairs(rows) do
-		table.insert(result, { id = row.id, note = row.note })
+		table.insert(result, { id = row.id, note = row.note, project = row.project or "no_project" })
 	end
 
 	return result
@@ -95,6 +95,7 @@ function M.get_notes(opts)
 		return create_return_table(notes:get_all_notes_by_project(opts.project))
 	end
 
+	-- FIXME: Unnecessary?
 	if opts.by == "id" then
 		return create_return_table(notes:get_note_by_id(opts.id))
 	end
