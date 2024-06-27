@@ -30,10 +30,7 @@ function M.get_note_by_project()
 	local project_path = utils.get_root_dir()
 
 	-- Get note by project
-	-- FIXME: Read project from current file. Look for root directory and use that as project name. (use lsp for this?)
 	local notes = database.get_notes({ by = "project", project = project_path })
-
-	print(vim.inspect(notes))
 
 	-- Print all notes
 	for _, item in ipairs(notes) do
