@@ -21,9 +21,6 @@ dependencies = {
     "nvim-lua/plenary.nvim",
     "kkharji/sqlite.lua",
 },
--- config = function()
---     require("notisnisse").setup({})
--- end,
 ```
 
 #### Available commands
@@ -34,25 +31,11 @@ Example (To create a note):
 :NotisNisse add
 ```
 
-| Command | Description       |
-| ------- | ----------------- |
-| add     | Create a new note |
-
-#### Configuration
-
-You must always run the setup method like this:
-
-```lua
--- config = function()
--- 	require("notisnisse").setup()
--- end
-```
-
-There are a few settings that might be relevant to change. The defaults are as follows:
-
-```lua
-local defaults = {}
-```
+| Command      | Description                           |
+| ------------ | ------------------------------------- |
+| add          | Create a new note                     |
+| show_all     | Show all notes                        |
+| show_project | Show all notes in the current project |
 
 #### TODO
 

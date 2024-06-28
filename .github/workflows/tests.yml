@@ -32,9 +32,9 @@ jobs:
           git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ~/.local/share/nvim/site/pack/vendor/start/plenary.nvim
           ln -s "$(pwd)" ~/.local/share/nvim/site/pack/vendor/start
 
-      - name: Prepare dependency mini.pick
+      - name: Prepare sqlite.lua
         run: |
-          git clone --depth 1 https://github.com/rcarriga/nvim-notify ~/.local/share/nvim/site/pack/vendor/start/nvim-notify
+          git clone --depth 1 https://github.com/kkharji/sqlite.lua ~/.local/share/nvim/site/pack/vendor/start/sqlite.lua
 
       - name: Setup neovim
         uses: rhysd/action-setup-vim@v1
