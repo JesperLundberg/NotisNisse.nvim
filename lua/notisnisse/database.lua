@@ -32,7 +32,10 @@ end
 local function create_return_table(rows)
 	local result = {}
 	for _, row in ipairs(rows) do
-		table.insert(result, { id = row.id, note = row.note, project = row.project or "no_project" })
+		table.insert(
+			result,
+			{ id = row.id, note = row.note, project = row.project or "no_project_supplied_at_creation" }
+		)
 	end
 
 	return result
