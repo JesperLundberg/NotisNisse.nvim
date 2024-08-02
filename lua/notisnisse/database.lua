@@ -41,6 +41,8 @@ local function create_return_table(rows)
 	return result
 end
 
+--- Update a note in the database
+--- @param note_to_update table The note to update
 function M.update_note(note_to_update)
 	if not note_to_update or note_to_update.id == nil then
 		return error("Note to update is missing id")
@@ -58,6 +60,8 @@ function M.add_note(note_to_add)
 end
 
 --- Get all notes from the database
+--- @param opts table Options for getting get_notes
+--- @option opts.by string The type of note to get (project or nil for all notes)
 --- @return table All notes from the database
 function M.get_notes(opts)
 	-- Get all notes

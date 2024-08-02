@@ -1,7 +1,8 @@
-local api = vim.api
-local utils = require("notisnisse.utils")
-
 local M = {}
+
+local api = vim.api
+
+local utils = require("notisnisse.utils")
 
 --- Method to center a string in a window
 --- @param str string
