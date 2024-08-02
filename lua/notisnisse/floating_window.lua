@@ -1,6 +1,7 @@
 local M = {}
 
 local api = vim.api
+local map = vim.keymap.set
 
 local utils = require("notisnisse.utils")
 
@@ -72,6 +73,32 @@ function M.open()
 	-- we can add title already here, because first line will never change
 	api.nvim_buf_set_lines(buf, 0, -1, false, { center("NotisNisse"), "", "" })
 
+	map({ "n" }, "D", function()
+		-- get the line where the cursor is
+		local line = api.nvim_get_current_line()
+
+		-- parse the node id (first word in the line)
+		local id = string.match(line, "%d+")
+
+		-- if there is no id, return silently
+		if not id then
+			return
+		end
+
+		-- call the delete_note function with the id
+		require("notisnisse.database").delete_note(id)
+
+		-- Make the buffer modifiable
+		api.nvim_set_option_value("modifiable", true, { buf = buf })
+
+		-- remove the line from the buffer
+		-- NOTE: api.nvim_win_get_cursor(win)[1] - 1 is the current line due to 0-based indexing
+		api.nvim_buf_set_lines(buf, api.nvim_win_get_cursor(win)[1] - 1, api.nvim_win_get_cursor(win)[1], false, {})
+
+		-- Make the buffer unmodifiable again
+		api.nvim_set_option_value("modifiable", false, { buf = buf })
+	end)
+
 	return win, buf -- Return window and buffer handles
 end
 
@@ -83,8 +110,16 @@ function M.update(win, buf, notes)
 	-- Make the buffer modifiable
 	api.nvim_set_option_value("modifiable", true, { buf = buf })
 
+	-- if there are no notes
+	if #notes == 0 then
+		notes = { "No notes found" }
+	else
+		-- flatten the notes so they can be displayed in the buffer
+		notes = utils.flatten_notes(notes)
+	end
+
 	-- Set the updated lines (start at row 2 to not overwrite the title)
-	api.nvim_buf_set_lines(buf, 2, -1, false, utils.flatten_notes(notes))
+	api.nvim_buf_set_lines(buf, 2, -1, false, notes)
 
 	-- Make the buffer unmodifiable
 	api.nvim_set_option_value("modifiable", false, { buf = buf })

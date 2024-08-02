@@ -52,6 +52,13 @@ function M.update_note(note_to_update)
 	notes:update({ id = note_to_update.id }, { note = note_to_update.note, project = note_to_update.project })
 end
 
+--- Delete a note from the database
+--- @param id_to_delete number The id of the note to delete
+function M.delete_note(id_to_delete)
+	-- Delete a note from the database
+	notes:remove({ id = id_to_delete })
+end
+
 --- Add a note to the database
 --- @param note_to_add table The note to add
 function M.add_note(note_to_add)
@@ -65,11 +72,12 @@ end
 --- @return table All notes from the database
 function M.get_notes(opts)
 	-- Get all notes
-	if not opts then
+	if not opts or #opts == 0 then
 		-- if by is not provided, get all notes
 		return create_return_table(notes:get())
 	end
 
+	-- Get notes by project
 	if opts.by == "project" then
 		return create_return_table(notes:get({ where = { project = opts.project } }))
 	end
