@@ -2,6 +2,10 @@ local M = {}
 
 local map = vim.keymap.set
 
+--- Create a popup window for user input
+--- @param on_confirm function to call when user confirms input
+--- @param opts table with options
+--- @option opts.title string title of the popup window
 function M.input_note_window(on_confirm, opts)
 	local win = require("plenary.popup").create("", {
 		title = opts.title or "",
