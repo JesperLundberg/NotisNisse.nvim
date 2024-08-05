@@ -58,15 +58,17 @@ local function update_note()
 		return
 	end
 
-	-- open the inputwindow again
+	-- get the note part of the line
+	local note_text = string.match(line, "%d+%s+(.*)%s")
 
-	-- create a new note with the id
-	-- local note = { id = id }
-
-	-- call the update_note function with the note to be updated
-	-- require("notisnisse.database").update_note(note)
-
-	-- update the note in the buffer
+	-- open the inputwindow again and set the previous note as the default value
+	require("notisnisse.input_window").input_note_window(note_text, function(input)
+		-- call the update_note function with the note to be updated
+		require("notisnisse.database").update_note({
+			id = id,
+			note = input,
+		})
+	end, { title = "Update note" })
 end
 
 --- Floating result window
@@ -129,6 +131,7 @@ function M.open()
 
 	-- register the delete note function
 	map({ "n" }, "D", delete_note)
+	-- register the update note function
 	map({ "n" }, "U", update_note)
 
 	return win, buf -- Return window and buffer handles

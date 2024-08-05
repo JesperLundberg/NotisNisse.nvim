@@ -7,8 +7,8 @@ local M = {}
 function M.add_note()
 	database.setup()
 
-	-- Open window to get note name
-	require("notisnisse.input_window").input_note_window(function(input)
+	-- Open emtpy window to get note name
+	require("notisnisse.input_window").input_note_window("", function(input)
 		-- Get the project path
 		local project_path = utils.get_root_dir()
 

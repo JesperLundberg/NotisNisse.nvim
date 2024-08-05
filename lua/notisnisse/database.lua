@@ -49,7 +49,11 @@ function M.update_note(note_to_update)
 	end
 
 	-- Update a note in the database
-	notes:update({ id = note_to_update.id }, { note = note_to_update.note, project = note_to_update.project })
+	-- notes:update({ id = note_to_update.id }, { note = note_to_update.note, project = note_to_update.project })
+	notes:update({
+		where = { id = note_to_update.id },
+		set = { note = note_to_update.note },
+	})
 end
 
 --- Delete a note from the database
