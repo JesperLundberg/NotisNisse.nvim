@@ -20,7 +20,9 @@ end
 function M.list_notes()
 	-- Get all notes
 	database.setup()
-	local notes = database.get_notes()
+
+	-- Give an emtpy table to get all notes
+	local notes = database.get_notes({})
 
 	-- Print all notes
 	local win, buf = floating_window.open()

@@ -11,14 +11,12 @@ function M.input_note_window(on_confirm, opts)
 		title = opts.title or "",
 		style = "minimal",
 		borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-		relative = "cursor",
 		borderhighlight = "NotisNisseBorder",
 		titlehighlight = "NotisNisseTitle",
 		focusable = true,
-		width = 25,
+		width = 40,
 		height = 1,
-		line = "cursor+2",
-		col = "cursor-1",
+		pos = "center",
 	})
 
 	vim.cmd("normal A")
