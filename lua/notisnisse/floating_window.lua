@@ -15,6 +15,60 @@ local function center(str)
 	return string.rep(" ", shift) .. str
 end
 
+--- Method to delete note
+local function delete_note()
+	-- get the line where the cursor is
+	local line = api.nvim_get_current_line()
+
+	-- parse the node id (first word in the line)
+	local id = string.match(line, "%d+")
+
+	-- if there is no id, return silently
+	if not id then
+		return
+	end
+
+	-- call the delete_note function with the id
+	require("notisnisse.database").delete_note(id)
+
+	local win = vim.api.nvim_get_current_win()
+	local buf = vim.api.nvim_get_current_buf()
+
+	-- Make the buffer modifiable
+	api.nvim_set_option_value("modifiable", true, { buf = buf })
+
+	-- remove the line from the buffer
+	-- NOTE: api.nvim_win_get_cursor(win)[1] - 1 is the current line due to 0-based indexing
+	api.nvim_buf_set_lines(buf, api.nvim_win_get_cursor(win)[1] - 1, api.nvim_win_get_cursor(win)[1], false, {})
+
+	-- Make the buffer unmodifiable again
+	api.nvim_set_option_value("modifiable", false, { buf = buf })
+end
+
+-- Method to update note
+local function update_note()
+	-- get the line where the cursor is
+	local line = api.nvim_get_current_line()
+
+	-- parse the node id (first word in the line)
+	local id = string.match(line, "%d+")
+
+	-- if there is no id, return silently
+	if not id then
+		return
+	end
+
+	-- open the inputwindow again
+
+	-- create a new note with the id
+	-- local note = { id = id }
+
+	-- call the update_note function with the note to be updated
+	-- require("notisnisse.database").update_note(note)
+
+	-- update the note in the buffer
+end
+
 --- Floating result window
 --- @return number, number
 function M.open()
@@ -73,31 +127,9 @@ function M.open()
 	-- we can add title already here, because first line will never change
 	api.nvim_buf_set_lines(buf, 0, -1, false, { center("NotisNisse"), "", "" })
 
-	map({ "n" }, "D", function()
-		-- get the line where the cursor is
-		local line = api.nvim_get_current_line()
-
-		-- parse the node id (first word in the line)
-		local id = string.match(line, "%d+")
-
-		-- if there is no id, return silently
-		if not id then
-			return
-		end
-
-		-- call the delete_note function with the id
-		require("notisnisse.database").delete_note(id)
-
-		-- Make the buffer modifiable
-		api.nvim_set_option_value("modifiable", true, { buf = buf })
-
-		-- remove the line from the buffer
-		-- NOTE: api.nvim_win_get_cursor(win)[1] - 1 is the current line due to 0-based indexing
-		api.nvim_buf_set_lines(buf, api.nvim_win_get_cursor(win)[1] - 1, api.nvim_win_get_cursor(win)[1], false, {})
-
-		-- Make the buffer unmodifiable again
-		api.nvim_set_option_value("modifiable", false, { buf = buf })
-	end)
+	-- register the delete note function
+	map({ "n" }, "D", delete_note)
+	map({ "n" }, "U", update_note)
 
 	return win, buf -- Return window and buffer handles
 end

@@ -68,22 +68,19 @@ end
 
 --- Get all notes from the database
 --- @param opts table Options for getting get_notes
---- @option opts.by string The type of note to get (project or nil for all notes)
+--- @option opts.by string The type of note to get (project or nil/{} for all notes)
 --- @return table All notes from the database
 function M.get_notes(opts)
 	-- Get all notes
-	if not opts or #opts == 0 then
-		-- if by is not provided, get all notes
-		return create_return_table(notes:get())
+	if opts or #opts ~= 0 then
+		-- Get notes by project
+		if opts.by == "project" then
+			return create_return_table(notes:get({ where = { project = opts.project } }))
+		end
 	end
 
-	-- Get notes by project
-	if opts.by == "project" then
-		return create_return_table(notes:get({ where = { project = opts.project } }))
-	end
-
-	-- Should never get here unless the opts are wrong
-	return {}
+	-- Get all notes if no opts are provided or the opts do not match existing opts
+	return create_return_table(notes:get())
 end
 
 return M
