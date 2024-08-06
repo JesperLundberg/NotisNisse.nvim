@@ -71,18 +71,19 @@ local function update_note()
 			note = input,
 		})
 
+		-- Get the info from the database again to get the most recent change
 		local note_to_show = database.get_note_by_id(id)
 
 		-- Make the buffer modifiable
 		api.nvim_set_option_value("modifiable", true, { buf = api.nvim_get_current_buf() })
 
-		-- update buffer with the updated note
+		-- update buffer with the updated note text
 		api.nvim_buf_set_lines(
 			api.nvim_get_current_buf(),
 			api.nvim_win_get_cursor(api.nvim_get_current_win())[1] - 1,
 			api.nvim_win_get_cursor(api.nvim_get_current_win())[1],
 			false,
-			{ note_to_show[1].id .. "\t\t" .. note_to_show[1].note .. "\t\t" .. note_to_show[1].project }
+			utils.flatten_notes(note_to_show)
 		)
 
 		-- Make the buffer unmodifiable again

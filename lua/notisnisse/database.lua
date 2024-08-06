@@ -46,7 +46,7 @@ end
 --- @return table The note with the given id
 function M.get_note_by_id(id)
 	-- Get a note by id
-	return create_return_table(notes:get({ id = id }))
+	return create_return_table(notes:get({ where = { id = id } }))
 end
 
 --- Update a note in the database
