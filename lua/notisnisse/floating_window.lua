@@ -3,6 +3,8 @@ local M = {}
 local api = vim.api
 local map = vim.keymap.set
 
+local database = require("notisnisse.database")
+local input_window = require("notisnisse.input_window")
 local utils = require("notisnisse.utils")
 
 --- Method to center a string in a window
@@ -29,7 +31,7 @@ local function delete_note()
 	end
 
 	-- call the delete_note function with the id
-	require("notisnisse.database").delete_note(id)
+	database.delete_note(id)
 
 	local win = vim.api.nvim_get_current_win()
 	local buf = vim.api.nvim_get_current_buf()
@@ -59,15 +61,32 @@ local function update_note()
 	end
 
 	-- get the note part of the line
-	local note_text = string.match(line, "%d+%s+(.*)%s")
+	local note_text = string.match(line, "%d+%s+(.*)%s+(.*)")
 
 	-- open the inputwindow again and set the previous note as the default value
-	require("notisnisse.input_window").input_note_window(note_text, function(input)
+	input_window.input_note_window(note_text, function(input)
 		-- call the update_note function with the note to be updated
-		require("notisnisse.database").update_note({
+		database.update_note({
 			id = id,
 			note = input,
 		})
+
+		local note_to_show = database.get_note_by_id(id)
+
+		-- Make the buffer modifiable
+		api.nvim_set_option_value("modifiable", true, { buf = api.nvim_get_current_buf() })
+
+		-- update buffer with the updated note
+		api.nvim_buf_set_lines(
+			api.nvim_get_current_buf(),
+			api.nvim_win_get_cursor(api.nvim_get_current_win())[1] - 1,
+			api.nvim_win_get_cursor(api.nvim_get_current_win())[1],
+			false,
+			{ note_to_show[1].id .. "\t\t" .. note_to_show[1].note .. "\t\t" .. note_to_show[1].project }
+		)
+
+		-- Make the buffer unmodifiable again
+		api.nvim_set_option_value("modifiable", false, { buf = api.nvim_get_current_buf() })
 	end, { title = "Update note" })
 end
 
@@ -128,6 +147,13 @@ function M.open()
 
 	-- we can add title already here, because first line will never change
 	api.nvim_buf_set_lines(buf, 0, -1, false, { center("NotisNisse"), "", "" })
+	api.nvim_buf_set_lines(
+		buf,
+		1,
+		-1,
+		false,
+		{ center("U - Update note cursor is on, D - Delete note cursor is on"), "", "" }
+	)
 
 	-- register the delete note function
 	map({ "n" }, "D", delete_note)
@@ -154,7 +180,7 @@ function M.update(win, buf, notes)
 	end
 
 	-- Set the updated lines (start at row 2 to not overwrite the title)
-	api.nvim_buf_set_lines(buf, 2, -1, false, notes)
+	api.nvim_buf_set_lines(buf, 3, -1, false, notes)
 
 	-- Make the buffer unmodifiable
 	api.nvim_set_option_value("modifiable", false, { buf = buf })

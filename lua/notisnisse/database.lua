@@ -41,6 +41,14 @@ local function create_return_table(rows)
 	return result
 end
 
+--- Get a note by id from the database
+--- @param id number The id of the note to get
+--- @return table The note with the given id
+function M.get_note_by_id(id)
+	-- Get a note by id
+	return create_return_table(notes:get({ id = id }))
+end
+
 --- Update a note in the database
 --- @param note_to_update table The note to update
 function M.update_note(note_to_update)
@@ -49,7 +57,6 @@ function M.update_note(note_to_update)
 	end
 
 	-- Update a note in the database
-	-- notes:update({ id = note_to_update.id }, { note = note_to_update.note, project = note_to_update.project })
 	notes:update({
 		where = { id = note_to_update.id },
 		set = { note = note_to_update.note },
