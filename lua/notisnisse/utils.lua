@@ -3,16 +3,23 @@ local path = require("plenary.path")
 local M = {}
 
 --- Flatten notes into one table of strings in array format
---- @param notes table The notes to be flattened
+--- @param notes table The table of notes to be flattened
 --- @return table The flattened notes
 function M.flatten_notes(notes)
 	local flattened_notes = {}
 
 	for _, note in ipairs(notes) do
-		table.insert(flattened_notes, note.id .. "\t\t" .. note.note .. "\t\t" .. note.project)
+		table.insert(flattened_notes, M.format_note(note))
 	end
 
 	return flattened_notes
+end
+
+--- Flatten a note into a string
+--- @param note table The note to be flattened
+--- @return string The flattened note
+function M.format_note(note)
+	return note.id .. "\t\t" .. note.note .. "\t\t" .. note.project
 end
 
 --- Get the root directory of the current git repository
