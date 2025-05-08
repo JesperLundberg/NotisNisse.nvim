@@ -1,15 +1,41 @@
--- Import necessary modules
+-- -- Import necessary modules
 -- local assert = require("luassert")
-
-describe("database", function()
-	-- System under test (database)
-	-- local sut = require("notisnisse.database")
-
-	-- Replace setup metod
-
-	describe("get_notes", function()
-		-- it("should_return_empty_table_with_nonexisting_opt_by_value", function()
-		-- 	assert.are.same({}, sut.get_notes({ by = "nonexisting" }))
-		-- end)
-	end)
-end)
+-- local sqlite = require("lsqlite3")
+--
+-- local dbdir = "/tmp/notisnisse.db"
+-- local db = nil
+-- local notes = nil
+--
+-- describe("database", function()
+-- 	-- System under test (database)
+-- 	local sut = require("notisnisse.database")
+--
+-- 	-- Replace setup metod
+-- 	sut.setup = function()
+-- 		if not vim.loop.fs_stat(dbdir) then
+-- 			vim.loop.fs_mkdir(dbdir, 493)
+-- 		end
+--
+-- 		-- Initialize the database
+-- 		db = sqlite({
+-- 			uri = dbdir,
+-- 			notes = {
+-- 				id = true, -- sets primary key and autoincrement
+-- 				note = "text",
+-- 				project = "text",
+-- 			},
+-- 			opt = {
+-- 				lazy = true,
+-- 			},
+-- 		})
+--
+-- 		notes = db.notes
+-- 	end
+--
+-- 	describe("get_notes", function()
+-- 		it("should_return_empty_table_with_nonexisting_opt_by_value", function()
+-- 			sut.setup()
+-- 			assert.are.same({}, sut.get_notes({ by = "nonexisting" }))
+-- 		end)
+-- 	end)
+-- end)
